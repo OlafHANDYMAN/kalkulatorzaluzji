@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Żaluzji</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1e1e1e;
+            color: #f4e1c1;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #2a2a2a;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        input {
+            margin: 10px 0;
+            padding: 12px;
+            width: calc(100% - 24px);
+            border: none;
+            border-radius: 8px;
+            background: #3a3a3a;
+            color: #f4e1c1;
+            font-size: 16px;
+            text-align: center;
+        }
+        button {
+            margin-top: 10px;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            background: #c2a270;
+            color: #1e1e1e;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #e1be89;
+        }
+        #wynik {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #f4e1c1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Kalkulator Żaluzji</h2>
+        <label for="wysokosc">Podaj wysokość przestrzeni (cm):</label>
+        <input type="text" id="wysokosc" placeholder="np. 123,4 lub 123.4">
+        <button onclick="oblicz()">Oblicz</button>
+        <div id="wynik"></div>
+    </div>
+
+    <script>
+        function obliczZaluzje(wysokosc) {
+            const pierwszaWysokosc = 51.5;
+            const kolejnaWysokosc = 50;
+            const wysokoscDeski = 10;
+            const desekNaSystem = 5;
+
+            let systemy = Math.ceil((wysokosc - pierwszaWysokosc) / kolejnaWysokosc) + 1;
+            let wysokoscSystemow = pierwszaWysokosc + (systemy - 1) * kolejnaWysokosc;
+            
+            if (wysokoscSystemow > wysokosc) {
+                let nadmiar = wysokoscSystemow - wysokosc;
+                let deskiDoOdjecia = Math.ceil(nadmiar / wysokoscDeski);
+                let deski = systemy * desekNaSystem - deskiDoOdjecia;
+                return { systemy, deski };
+            }
+            
+            return { systemy, deski: systemy * desekNaSystem };
+        }
+
+        function oblicz() {
+            let wysokoscInput = document.getElementById("wysokosc").value.replace(",", ".");
+            let wysokosc = parseFloat(wysokoscInput);
+            
+            if (isNaN(wysokosc) || wysokosc < 51.5) {
+                document.getElementById("wynik").innerText = "Podaj poprawną wysokość (minimum 51.5 cm)";
+                return;
+            }
+            let wynik = obliczZaluzje(wysokosc);
+            document.getElementById("wynik").innerText = `Potrzebujesz ${wynik.systemy} systemów oraz ${wynik.deski} deseczek.`;
+        }
+    </script>
+</body>
+</html>
